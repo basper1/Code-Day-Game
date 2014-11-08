@@ -1,7 +1,7 @@
 class Room {
   String[][] tiles;
   Room(String type) {
-    tiles = new String[(int)(random(20, 30))][(int)(random(20, 30))];
+    tiles = new String[(int)(random(20, 32))][(int)(random(20, 32))];
     for (int y=0; y<tiles[0].length; y++) {
       for (int x=0; x<tiles.length; x++) {
         tiles[x][y] = "Normal";
@@ -23,9 +23,20 @@ class Room {
       tiles[0][tiles[0].length/2] = "Exit";
       tiles[tiles.length-1][tiles[0].length/2] = "Exit";
     }
-    if (type.equals("Prison")) {
+    else if (type.equals("Prison")) {
+      int cellsWidth = tiles.length/(int)(random(3, 6));
       int cellsHeight = (int)(random(3, 6));
-      int cellsWidth = (int)(random(3, 6));
+      for(int y=0; y<tiles[0].length; y++){
+        tiles[cellsWidth][y] = "Wall";
+        tiles[tiles.length-cellsWidth-1][y] = "Wall";
+      }
+      for(int y=0; y<cellsHeight; y++){
+        for(int x=0; x<cellsWidth; x++){
+          tiles[x][tiles[0].length/cellsHeight*y] = "Wall";
+          tiles[cellsWidth*2+x][tiles[0].length/cellsHeight*y] = "Wall";
+        }
+        tiles[cellsWidth][y*(tiles[0].length/cellsHeight)+tiles[0].length/cellsHeight/2] = "Floor";
+      }
     }
   }
   void display() {
