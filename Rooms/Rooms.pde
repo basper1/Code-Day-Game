@@ -95,6 +95,10 @@ class Room {
       for(int i = -1;i < 2;i++){
         tiles[tiles.length / 2 - 2][tiles[0].length / 2 + i] = "Floor";
       }
+      tiles[tiles.length/4][tiles[0].length / 2 - 2] = "Floor";
+      tiles[tiles.length/4][tiles[0].length / 2 + 2] = "Floor";
+      tiles[tiles.length/4*3][tiles[0].length / 2 - 2] = "Floor";
+      tiles[tiles.length/4*3][tiles[0].length / 2 + 2] = "Floor";
       
       tiles[tiles.length/2][0] = "Exit";
       tiles[tiles.length/2][tiles[0].length-1] = "Exit";
@@ -126,10 +130,7 @@ int tileSize;
 Room test;
 
 void setup() {
-<<<<<<< HEAD
   //noStroke();
-=======
->>>>>>> origin/master
   tileSize = 20;
   size(800, 700);
   test = new Room("Armory");
