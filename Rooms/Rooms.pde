@@ -54,7 +54,7 @@ class Room {
         rect(x*tileSize, y*tileSize, tileSize, tileSize);
       }
     }
-  }
+  }  
 }
 
 int tileSize;
