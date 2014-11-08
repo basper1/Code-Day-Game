@@ -17,15 +17,16 @@ class Room {
         tiles[x][y] = "Wall";
       }
     }
-    if(type.equals("Normal")){
+    if (type.equals("Normal")) {
       tiles[tiles.length/2][0] = "Exit";
       tiles[tiles.length/2][tiles[0].length-1] = "Exit";
       tiles[0][tiles[0].length/2] = "Exit";
       tiles[tiles.length-1][tiles[0].length/2] = "Exit";
     }
-    if(type.equals("Prison")){
+    if (type.equals("Prison")) {
       int cellsHeight = (int)(random(3, 6));
-      int cellsWidth = (int)(random(tiles.length/4, tiles.length/3));
+      int cellsWidth = (int)(random(3, 6));
+    }
   }
   void display() {
     pushMatrix();
@@ -52,7 +53,7 @@ void setup() {
   noStroke();
   tileSize = 20;
   size(800, 700);
-  test = new Room("Normal");
+  test = new Room("Prison");
   background(0);
   test.display();
 }
