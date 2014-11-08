@@ -94,8 +94,13 @@ PImage playerSprite;
 int playerSpeed;
 boolean moving;
 
+boolean up;
+boolean down;
+boolean left;
+boolean right;
+
 void setup() {
-  playerSpeed = 5;
+  playerSpeed = 4;
   tileSize = 20;
   size(800, 700);
   playerSprite = loadImage("Player.png");
@@ -106,6 +111,11 @@ void setup() {
   playerPixelY = playerY*tileSize;
 
   moving = false;
+
+  up = false;
+  down = false;
+  left = false;
+  right = false;
 }
 
 void draw() {
@@ -114,46 +124,72 @@ void draw() {
   pushMatrix();
   translate((width-current.tiles.length*tileSize)/2, (height-current.tiles[0].length*tileSize)/2);
   image(playerSprite, playerPixelX, playerPixelY);
-  if(playerPixelX < playerX*tileSize){
-    playerPixelX += playerSpeed;
-  }
-  if(playerPixelX > playerX*tileSize){
-    playerPixelX -= playerSpeed;
-  }
-  if(playerPixelY < playerY*tileSize){
-    playerPixelY += playerSpeed;
-  }
-  if(playerPixelY > playerY*tileSize){
-    playerPixelY -= playerSpeed;
-  }
-  if(Math.abs(playerPixelX-playerX*tileSize) < playerSpeed){
+  if (Math.abs(playerPixelX-playerX*tileSize) <= playerSpeed) {
     playerPixelX = playerX*tileSize;
   }
-  if(Math.abs(playerPixelY-playerY*tileSize) < playerSpeed){
+  if (Math.abs(playerPixelY-playerY*tileSize) <= playerSpeed) {
     playerPixelY = playerY*tileSize;
   }
-  if(playerPixelX == playerX*tileSize && playerPixelY == playerY*tileSize){
-    moving = false;
+  if (playerPixelX == playerX*tileSize && playerPixelY == playerY*tileSize) {
+    if(up == true && !current.tiles[playerX][playerY-1].equals("Wall")){
+      playerY--;
+    }
+    if(down == true && !current.tiles[playerX][playerY+1].equals("Wall")){
+      playerY++;
+    }
+    if(left == true && !current.tiles[playerX-1][playerY].equals("Wall")){
+      playerX--;
+    }
+    if(right == true && !current.tiles[playerX+1][playerY].equals("Wall")){
+      playerX++;
+    }
+  }
+  if (playerPixelX < playerX*tileSize) {
+    playerPixelX += playerSpeed;
+  }
+  if (playerPixelX > playerX*tileSize) {
+    playerPixelX -= playerSpeed;
+  }
+  if (playerPixelY < playerY*tileSize) {
+    playerPixelY += playerSpeed;
+  }
+  if (playerPixelY > playerY*tileSize) {
+    playerPixelY -= playerSpeed;
   }
   popMatrix();
 }
 
-void keyPressed(){
-  if(key == CODED){
-    if(moving == false && (keyCode == UP || keyCode == DOWN || keyCode == LEFT || keyCode == RIGHT)){
-      moving = true;
-      if(keyCode == UP && !current.tiles[playerX][playerY-1].equals("Wall")){
-        playerY--;
-      }
-      if(keyCode == DOWN && !current.tiles[playerX][playerY+1].equals("Wall")){
-        playerY++;
-      }
-      if(keyCode == LEFT && !current.tiles[playerX-1][playerY].equals("Wall")){
-        playerX--;
-      }
-      if(keyCode == RIGHT && !current.tiles[playerX+1][playerY].equals("Wall")){
-        playerX++;
-      }
+void keyPressed() {
+  if (key == CODED) {
+    if (keyCode == UP){
+      up = true;
+    }
+    if (keyCode == DOWN){
+      down = true;
+    }
+    if (keyCode == LEFT){
+      left = true;
+    }
+    if (keyCode == RIGHT){
+      right = true;
     }
   }
 }
+
+void keyReleased() {
+  if (key == CODED) {
+    if (keyCode == UP) {
+      up = false;
+    }
+    if (keyCode == DOWN) {
+      down = false;
+    }
+    if (keyCode == LEFT) {
+      left = false;
+    }
+    if (keyCode == RIGHT) {
+      right = false;
+    }
+  }
+}
+
