@@ -43,6 +43,26 @@ class Room {
       tiles[0][(int)(random(0, cellsHeight))*(tiles[0].length/cellsHeight)+tiles[0].length/cellsHeight/2] = "Exit";
       tiles[tiles.length-1][(int)(random(0, cellsHeight))*(tiles[0].length/cellsHeight)+tiles[0].length/cellsHeight/2] = "Exit";
     }
+    else if(type.equals("Courtyard")){
+      int borderWidth = (int)(random(tiles.length/4, tiles.length/3));
+      int borderHeight = (int)(random(tiles.length/8, tiles.length/4));
+      for(int x=borderWidth; x<tiles.length-borderWidth; x++){
+        tiles[x][borderHeight] = "Wall";
+        tiles[x][tiles[0].length-borderHeight-1] = "Wall";
+      }
+      for(int y=borderHeight; y<tiles[0].length-borderHeight; y++){
+        tiles[borderWidth][y] = "Wall";
+        tiles[tiles.length-borderWidth][y] = "Wall";
+      }
+//      tiles[tiles.length/2][borderHeight] = "Floor";
+//      tiles[tiles.length/2][tiles[0].length-borderHeight-1] = "Floor";
+//      tiles[borderWidth][tiles[0].length/2] = "Floor";
+//      tiles[tiles.length-borderWidth][tiles[0].length/2] = "Floor";
+      tiles[tiles.length/2][0] = "Exit";
+      tiles[tiles.length/2][tiles[0].length-1] = "Exit";
+      tiles[0][tiles[0].length/2] = "Exit";
+      tiles[tiles.length-1][tiles[0].length/2] = "Exit";
+    }
   }
   void display() {
     pushMatrix();
@@ -59,7 +79,7 @@ class Room {
         rect(x*tileSize, y*tileSize, tileSize, tileSize);
       }
     }
-  }  
+  }
 }
 
 int tileSize;
@@ -69,7 +89,7 @@ void setup() {
   noStroke();
   tileSize = 20;
   size(800, 700);
-  test = new Room("Prison");
+  test = new Room("Courtyard");
   background(0);
   test.display();
 }
