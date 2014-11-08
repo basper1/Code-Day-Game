@@ -1,3 +1,33 @@
+class Enemy {
+  String type;
+  int health;
+  int xPos;
+  int yPos;
+  int xPixel;
+  int yPixel;
+  Enemy(String type, int xPos, int yPos) {
+    this.type = type;
+    if (type.equals("Zombie")) {
+      health = 12;
+    } else if (type.equals("Dog")) {
+      health = 9;
+    } else if (type.equals("Robot")) {
+      health = 18;
+    }
+    this.xPos = xPos;
+    this.yPos = yPos;
+    xPixel = xPos * tileSize;
+    yPixel = yPos * tileSize;
+  }
+  void display() {
+    if (type.equals("Zombie")) {
+      image(zombieSprite, xPixel, yPixel);
+    }
+  }
+}
+
+//The room class
+
 class Room {
   String[][] tiles;
   Room left;
@@ -84,8 +114,11 @@ class Room {
   }
 }
 
+//Global variables
+
 int tileSize;
 Room current;
+boolean setRoom;
 int playerX;
 int playerY;
 int playerPixelX;
@@ -99,8 +132,15 @@ boolean down;
 boolean left;
 boolean right;
 
+PImage zombieSprite;
+String[] enemyTypes;
+ArrayList<Enemy> enemies;
+
+//Setting up variables for the game
+
 void setup() {
-  playerSpeed = 4;
+  playerSpeed = 3;
+  setRoom = true;
   tileSize = 20;
   size(800, 700);
   playerSprite = loadImage("Player.png");
@@ -116,6 +156,12 @@ void setup() {
   down = false;
   left = false;
   right = false;
+
+  zombieSprite = loadImage("Zombie.png");
+  enemyTypes = new String[] {
+    "Zombie", "Robot", "Dog"
+  };
+  enemies = new ArrayList<Enemy>();
 }
 
 void draw() {
@@ -124,6 +170,9 @@ void draw() {
   pushMatrix();
   translate((width-current.tiles.length*tileSize)/2, (height-current.tiles[0].length*tileSize)/2);
   image(playerSprite, playerPixelX, playerPixelY);
+  for (int i=0; i<enemies.size (); i++) {
+    enemies.get(i).display();
+  }
   if (Math.abs(playerPixelX-playerX*tileSize) <= playerSpeed) {
     playerPixelX = playerX*tileSize;
   }
@@ -131,16 +180,16 @@ void draw() {
     playerPixelY = playerY*tileSize;
   }
   if (playerPixelX == playerX*tileSize && playerPixelY == playerY*tileSize) {
-    if(up == true && !current.tiles[playerX][playerY-1].equals("Wall")){
+    if (up == true && !current.tiles[playerX][playerY-1].equals("Wall")) {
       playerY--;
     }
-    if(down == true && !current.tiles[playerX][playerY+1].equals("Wall")){
+    if (down == true && !current.tiles[playerX][playerY+1].equals("Wall")) {
       playerY++;
     }
-    if(left == true && !current.tiles[playerX-1][playerY].equals("Wall")){
+    if (left == true && !current.tiles[playerX-1][playerY].equals("Wall")) {
       playerX--;
     }
-    if(right == true && !current.tiles[playerX+1][playerY].equals("Wall")){
+    if (right == true && !current.tiles[playerX+1][playerY].equals("Wall")) {
       playerX++;
     }
   }
@@ -157,20 +206,47 @@ void draw() {
     playerPixelY -= playerSpeed;
   }
   popMatrix();
+  if (setRoom == true) {
+    int a = (int)(random(6, 11));
+    for (int i=0; i<a; i++) {
+      int x = 0;
+      int y = 0;
+      boolean repeat = true;
+      while (repeat == true) {
+        repeat = false;
+        x = (int)(random(1, current.tiles.length));
+        y = (int)(random(1, current.tiles[0].length));
+        if(current.tiles[x][y].equals("Wall")){
+          repeat = true;
+        }
+        if(enemies.size() > 0){
+          for(int j=0; j<enemies.size(); j++){
+            if(enemies.get(j).xPos == x && enemies.get(j).yPos == y){
+              repeat = true;
+              break;
+            }
+          }
+        }
+      }
+      Enemy b = new Enemy("Zombie", x, y);
+      enemies.add(b);
+    }
+    setRoom = false;
+  }
 }
 
 void keyPressed() {
   if (key == CODED) {
-    if (keyCode == UP){
+    if (keyCode == UP) {
       up = true;
     }
-    if (keyCode == DOWN){
+    if (keyCode == DOWN) {
       down = true;
     }
-    if (keyCode == LEFT){
+    if (keyCode == LEFT) {
       left = true;
     }
-    if (keyCode == RIGHT){
+    if (keyCode == RIGHT) {
       right = true;
     }
   }
