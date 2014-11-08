@@ -4,10 +4,8 @@ class Zombie{
   public int getX(){
     return xPos;
   }
-  public int getY(){
-    
 }
-int numZed = (int)random(4, 8);
+/*int numZed = (int)random(4, 8);
 for(int i=0;i < numZed;i++){
   create(0,0)
 }
@@ -19,5 +17,5 @@ void createXY(int x,int y){
     createXY;
   }
   return null;
-}
+}*/
 

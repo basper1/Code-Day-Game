@@ -62,6 +62,45 @@ class Room {
       tiles[tiles.length/2][tiles[0].length-1] = "Exit";
       tiles[0][tiles[0].length/2] = "Exit";
       tiles[tiles.length-1][tiles[0].length/2] = "Exit";
+    } 
+    else if(type.equals("Armory")){
+      int hallwayX;
+      int hallwayY;
+      if(tiles.length % 2 == 0){
+        hallwayX = 4;
+      }else{
+        hallwayX = 5;
+      }
+      if(tiles[0].length % 2 == 0){
+        hallwayY = 4;
+      }else{
+        hallwayY = 5;
+      }
+      for(int i = 0; i <tiles.length;i++){
+        tiles[i][tiles[0].length / 2 + 2] = "Wall";
+        tiles[i][tiles[0].length / 2 - 2] = "Wall";
+      }
+      for(int i = 0; i <tiles[0].length;i++){
+        tiles[tiles.length / 2 + 2][i] = "Wall";
+        tiles[tiles.length / 2 - 2][i] = "Wall";
+      }
+      for(int i = -1;i < 2;i++){
+        tiles[tiles.length / 2 + i][tiles[0].length / 2 + 2] = "Floor";
+      }
+      for(int i = -1;i < 2;i++){
+        tiles[tiles.length / 2 + i][tiles[0].length / 2 - 2] = "Floor";
+      }
+      for(int i = -1;i < 2;i++){
+        tiles[tiles.length / 2 + 2][tiles[0].length / 2 + i] = "Floor";
+      }
+      for(int i = -1;i < 2;i++){
+        tiles[tiles.length / 2 - 2][tiles[0].length / 2 + i] = "Floor";
+      }
+      
+      tiles[tiles.length/2][0] = "Exit";
+      tiles[tiles.length/2][tiles[0].length-1] = "Exit";
+      tiles[0][tiles[0].length/2] = "Exit";
+      tiles[tiles.length-1][tiles[0].length/2] = "Exit";
     }
   }
   void display() {
@@ -75,6 +114,8 @@ class Room {
           fill(128);
         } else if (tiles[x][y].equals("Exit")) {
           fill(64);
+        } else if (tiles[x][y].equals("Test")){
+          fill(255,0,0);
         }
         rect(x*tileSize, y*tileSize, tileSize, tileSize);
       }
@@ -86,10 +127,10 @@ int tileSize;
 Room test;
 
 void setup() {
-  noStroke();
+  //noStroke();
   tileSize = 20;
   size(800, 700);
-  test = new Room("Courtyard");
+  test = new Room("Armory");
   background(0);
   test.display();
 }
