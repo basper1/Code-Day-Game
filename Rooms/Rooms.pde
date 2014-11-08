@@ -33,10 +33,15 @@ class Room {
       for(int y=0; y<cellsHeight; y++){
         for(int x=0; x<cellsWidth; x++){
           tiles[x][tiles[0].length/cellsHeight*y] = "Wall";
-          tiles[cellsWidth*2+x][tiles[0].length/cellsHeight*y] = "Wall";
+          tiles[tiles.length-cellsWidth+x][tiles[0].length/cellsHeight*y] = "Wall";
         }
         tiles[cellsWidth][y*(tiles[0].length/cellsHeight)+tiles[0].length/cellsHeight/2] = "Floor";
+        tiles[tiles.length-cellsWidth-1][y*(tiles[0].length/cellsHeight)+tiles[0].length/cellsHeight/2] = "Floor";
       }
+      tiles[tiles.length/2][0] = "Exit";
+      tiles[tiles.length/2][tiles[0].length-1] = "Exit";
+      tiles[0][(int)(random(0, cellsHeight))*(tiles[0].length/cellsHeight)+tiles[0].length/cellsHeight/2] = "Exit";
+      tiles[tiles.length-1][(int)(random(0, cellsHeight))*(tiles[0].length/cellsHeight)+tiles[0].length/cellsHeight/2] = "Exit";
     }
   }
   void display() {
