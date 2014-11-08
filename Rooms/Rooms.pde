@@ -1,5 +1,9 @@
 class Room {
   String[][] tiles;
+  Room left;
+  Room right;
+  Room up;
+  Room down;
   Room(String type) {
     tiles = new String[(int)(random(20, 32))][(int)(random(20, 32))];
     for (int y=0; y<tiles[0].length; y++) {
@@ -78,17 +82,30 @@ class Room {
         rect(x*tileSize, y*tileSize, tileSize, tileSize);
       }
     }
+    popMatrix();
   }
 }
 
 int tileSize;
-Room test;
+Room current;
+int playerX;
+int playerY;
+PImage playerSprite;
 
 void setup() {
   tileSize = 20;
   size(800, 700);
-  test = new Room("Courtyard");
-  background(0);
-  test.display();
+  playerSprite = loadImage("Player.png");
+  current = new Room("Prison");
+  playerX = current.tiles.length/2;
+  playerY = current.tiles[0].length/2;
 }
 
+void draw(){
+  background(0);
+  current.display();
+  pushMatrix();
+  translate((width-current.tiles.length*tileSize)/2, (height-current.tiles[0].length*tileSize)/2);
+  image(playerSprite, playerX*tileSize, playerY*tileSize);
+  popMatrix();
+}
