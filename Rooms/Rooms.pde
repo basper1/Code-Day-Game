@@ -7,6 +7,7 @@ class Enemy {
   int counter;
   int yPixel;
   PImage image;
+  int robotLeash = 100;
   Enemy(String type, int xPos, int yPos) {
     this.type = type;
     counter = 0;
@@ -44,6 +45,7 @@ class Enemy {
       if (Math.abs(yPixel - yPos*tileSize) <= robotSpeed) {
         yPixel = yPos*tileSize;
       }
+<<<<<<< HEAD
       if (xPixel == xPos*tileSize && yPixel == yPos*tileSize && counter == 30) {
         counter = 0;
         changeX = (int)(random(0, 3));
@@ -59,6 +61,41 @@ class Enemy {
           } else if (yPos > playerY) {
             yPos--;
           }
+=======
+      if (xPixel == xPos*tileSize && yPixel == yPos*tileSize) {
+        /*if (xPos < playerX && canRight == true) {
+          xPos++;
+        } else if (xPos > playerX && canLeft == true) {
+          xPos--;
+        }
+        if (yPos < playerY && canDown == true) {
+          yPos++;
+        } else if (yPos > playerY && canUp == true) {
+          yPos--;
+        }*/
+        if((xPos - playerX)*(xPos - playerX)+(yPos - playerY)*(yPos - playerY) < robotLeash*robotLeash){
+          if(xPos != playerX){
+            if(xPos> playerX){
+              xPos-=random(0,2);
+            }else if(xPos< playerX){
+              xPos+=random(0,2);
+            }
+          }else{
+            xPos+=random(-1,2);
+          }
+          if(yPos != playerY){
+            if(yPos> playerY){
+              yPos-=random(0,2);
+            }else if(yPos< playerY){
+              yPos+=random(0,2);
+            }
+          }else{
+            yPos+=random(-1,2);
+          }
+        }else{
+          yPos+=random(-1,2);
+          xPos+=random(-1,2);
+>>>>>>> origin/master
         }
       }
       if (xPixel < xPos*tileSize) {
