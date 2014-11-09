@@ -23,6 +23,9 @@ class Enemy {
     if (type.equals("Zombie")) {
       image(zombieSprite, xPixel, yPixel);
     }
+    else if(type.equals("Dog")){
+      image(dogSprite, xPixel, yPixel);
+    }
   }
 }
 
@@ -133,6 +136,7 @@ boolean left;
 boolean right;
 
 PImage zombieSprite;
+PImage dogSprite;
 String[] enemyTypes;
 ArrayList<Enemy> enemies;
 
@@ -158,6 +162,7 @@ void setup() {
   right = false;
 
   zombieSprite = loadImage("Zombie.png");
+  dogSprite = loadImage("Dog.png");
   enemyTypes = new String[] {
     "Zombie", "Robot", "Dog"
   };
