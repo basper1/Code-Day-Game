@@ -58,8 +58,8 @@ class Enemy {
         } else if (yPos > playerY) {
           yPos--;
         }
-        for(int i=0; i<enemies.size(); i++){
-          if(xPos == enemies.get(i).xPos && yPos == enemies.get(i).yPos && enemies.get(i) != this){
+        for (int i=0; i<enemies.size (); i++) {
+          if (xPos == enemies.get(i).xPos && yPos == enemies.get(i).yPos && enemies.get(i) != this) {
             xPos = xPosMem;
             yPos = yPosMem;
           }
@@ -78,12 +78,11 @@ class Enemy {
     } else if (type.equals("Zombie")) {
       String[][] copy = current.tiles;
       int[][] route = new int[copy.length][copy[0].length];
-      for(int y=0; y<copy[0].length; y++){
-        for(int x=0; x<copy.length; x++){
-          if(copy[x][y].equals("Wall")){
+      for (int y=0; y<copy[0].length; y++) {
+        for (int x=0; x<copy.length; x++) {
+          if (copy[x][y].equals("Wall")) {
             route[x][y] = 0;
-          }
-          else if(copy[x][y].equals("Floor")){
+          } else if (copy[x][y].equals("Floor")) {
             route[x][y] = 1;
           }
         }
@@ -92,10 +91,10 @@ class Enemy {
   }
 }
 
-void pathFind(int[][] x, int startX, int startY){
+void pathFind(int[][] x, int startX, int startY) {
   int current = x[startX][startY];
 }
-  
+
 
 //The room class
 
@@ -172,13 +171,16 @@ class Room {
     for (int y=0; y<tiles[0].length; y++) {
       for (int x=0; x<tiles.length; x++) {
         if (tiles[x][y].equals("Floor")) {
-          fill(255);
+          image(floorSprite, x*tileSize, y*tileSize);
         } else if (tiles[x][y].equals("Wall")) {
-          fill(128);
+          image(wallSprite, x*tileSize, y*tileSize);
         } else if (tiles[x][y].equals("Exit")) {
-          fill(64);
+          if (roomClear == false) {
+            image(exitClose, x*tileSize, y*tileSize);
+          } else if (roomClear == true) {
+            image(exitOpen, x*tileSize, y*tileSize);
+          }
         }
-        rect(x*tileSize, y*tileSize, tileSize, tileSize);
       }
     }
     popMatrix();
@@ -213,9 +215,18 @@ int collideRange;
 
 int robotSpeed;
 
+PImage wallSprite;
+PImage floorSprite;
+PImage exitOpen;
+PImage exitClose;
+
 //Setting up variables for the game
 
 void setup() {
+  exitOpen = loadImage("ExitOpen.png");
+  exitClose = loadImage("ExitClose.png");
+  wallSprite = loadImage("Wall.png");
+  floorSprite = loadImage("Floor.png");
   roomClear = false;
   frameRate(60);
   playerSpeed = 3;
@@ -248,17 +259,51 @@ void setup() {
   enemies = new ArrayList<Enemy>();
 }
 
-boolean playerCollide(int xChange, int yChange){
+boolean playerCollide(int xChange, int yChange) {
   boolean collide = false;
   int x = playerX+xChange;
   int y = playerY+yChange;
-  if(current.tiles[x][y].equals("Wall") || (current.tiles[x][y].equals("Exit") && roomClear == false)){
+  if (current.tiles[x][y].equals("Wall") || (current.tiles[x][y].equals("Exit") && roomClear == false)) {
     collide = true;
   }
   return collide;
 }
 
 void draw() {
+  if (setRoom == true) {
+    int a = (int)(random(6, 11));
+    for (int i=0; i<a; i++) {
+      int x = 0;
+      int y = 0;
+      boolean repeat = true;
+      while (repeat == true) {
+        repeat = false;
+        x = (int)(random(1, current.tiles.length));
+        y = (int)(random(1, current.tiles[0].length));
+        if (current.tiles[x][y].equals("Wall")) {
+          repeat = true;
+        }
+        if (enemies.size() > 0) {
+          for (int j=0; j<enemies.size (); j++) {
+            if (enemies.get(j).xPos == x && enemies.get(j).yPos == y) {
+              repeat = true;
+              break;
+            }
+          }
+        }
+      }
+      Enemy b = new Enemy(enemyTypes[(int)(random(0, enemyTypes.length))], x, y);
+      enemies.add(b);
+    }
+    setRoom = false;
+    roomClear = false;
+  }
+  if (enemies.size() == 0) {
+    roomClear = true;
+  }
+
+  //Drawing segment
+
   background(0);
   current.display();
   pushMatrix();
@@ -301,37 +346,6 @@ void draw() {
     playerPixelY -= playerSpeed;
   }
   popMatrix();
-  if (setRoom == true) {
-    int a = (int)(random(6, 11));
-    for (int i=0; i<a; i++) {
-      int x = 0;
-      int y = 0;
-      boolean repeat = true;
-      while (repeat == true) {
-        repeat = false;
-        x = (int)(random(1, current.tiles.length));
-        y = (int)(random(1, current.tiles[0].length));
-        if (current.tiles[x][y].equals("Wall")) {
-          repeat = true;
-        }
-        if (enemies.size() > 0) {
-          for (int j=0; j<enemies.size (); j++) {
-            if (enemies.get(j).xPos == x && enemies.get(j).yPos == y) {
-              repeat = true;
-              break;
-            }
-          }
-        }
-      }
-      Enemy b = new Enemy(enemyTypes[(int)(random(0, enemyTypes.length))], x, y);
-      enemies.add(b);
-    }
-    setRoom = false;
-    roomClear = false;
-  }
-  if(enemies.size() == 0){
-    roomClear = true;
-  }
 }
 
 void keyPressed() {
