@@ -196,6 +196,7 @@ int playerPixelY;
 PImage playerSprite;
 int playerSpeed;
 boolean moving;
+boolean roomClear;
 
 boolean up;
 boolean down;
@@ -215,6 +216,7 @@ int robotSpeed;
 //Setting up variables for the game
 
 void setup() {
+  roomClear = false;
   frameRate(60);
   playerSpeed = 3;
   setRoom = true;
@@ -246,6 +248,16 @@ void setup() {
   enemies = new ArrayList<Enemy>();
 }
 
+boolean playerCollide(int xChange, int yChange){
+  boolean collide = false;
+  int x = playerX+xChange;
+  int y = playerY+yChange;
+  if(current.tiles[x][y].equals("Wall") || (current.tiles[x][y].equals("Exit") && roomClear == false)){
+    collide = true;
+  }
+  return collide;
+}
+
 void draw() {
   background(0);
   current.display();
@@ -263,16 +275,16 @@ void draw() {
     playerPixelY = playerY*tileSize;
   }
   if (playerPixelX == playerX*tileSize && playerPixelY == playerY*tileSize) {
-    if (up == true && !current.tiles[playerX][playerY-1].equals("Wall")) {
+    if (up == true && !playerCollide(0, -1)) {
       playerY--;
     }
-    if (down == true && !current.tiles[playerX][playerY+1].equals("Wall")) {
+    if (down == true && !playerCollide(0, 1)) {
       playerY++;
     }
-    if (left == true && !current.tiles[playerX-1][playerY].equals("Wall")) {
+    if (left == true && !playerCollide(-1, 0)) {
       playerX--;
     }
-    if (right == true && !current.tiles[playerX+1][playerY].equals("Wall")) {
+    if (right == true && !playerCollide(1, 0)) {
       playerX++;
     }
   }
@@ -315,6 +327,10 @@ void draw() {
       enemies.add(b);
     }
     setRoom = false;
+    roomClear = false;
+  }
+  if(enemies.size() == 0){
+    roomClear = true;
   }
 }
 
