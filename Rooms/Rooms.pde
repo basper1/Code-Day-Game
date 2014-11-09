@@ -81,19 +81,54 @@ class Enemy {
       for(int y=0; y<copy[0].length; y++){
         for(int x=0; x<copy.length; x++){
           if(copy[x][y].equals("Wall")){
-            route[x][y] = 0;
+            route[x][y] = -2;
           }
-          else if(copy[x][y].equals("Floor")){
-            route[x][y] = 1;
+          else{
+            route[x][y] = -1;
           }
+          route[xPos][yPos] = 0;        
         }
       }
+      route = pathFind(route, 0);
+      /*for(int i = 0;i<route.length;i++){
+        for(int j = 0;j<route[0].length;j++){
+          print(route[i][j] + " ");
+        }
+        println(" ");
+      }*/
     }
   }
 }
 
-void pathFind(int[][] x, int startX, int startY){
-  int current = x[startX][startY];
+int[][] pathFind(int[][] x,int num){
+  boolean again = false;
+   for(int i = 1;i <x.length - 1;i++){ //height
+     for(int j = 1;j<x[0].length - 1;j++){ //width
+       if(x[i][j] == num){
+         again = true;
+         if(x[i+1][j] == -1){
+           x[i+1][j] = num + 1;
+         }
+         if(x[i-1][j] == -1){
+           x[i-1][j] = num + 1;
+         }
+         if(x[i][j+1] == -1){
+           x[i][j+1] = num + 1;
+         }
+         if(x[i][j-1] == -1){
+           x[i][j-1] = num + 1;
+         }
+       }
+     }
+   }
+   if(again){
+    return pathFind(x,num+1);
+   }else{
+    return x;
+   }
+    
+    
+     
 }
   
 
