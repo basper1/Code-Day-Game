@@ -4,10 +4,12 @@ class Enemy {
   int xPos;
   int yPos;
   int xPixel;
+  int counter;
   int yPixel;
   PImage image;
   Enemy(String type, int xPos, int yPos) {
     this.type = type;
+    counter = 0;
     if (type.equals("Zombie")) {
       health = 12;
     } else if (type.equals("Dog")) {
@@ -30,58 +32,46 @@ class Enemy {
     }
   }
   void move() {
-    boolean canUp = true;
-    boolean canDown = true;
-    boolean canLeft = true;
-    boolean canRight = true;
-    for (int i=0; i<enemies.size (); i++) {
-      Enemy a = enemies.get(i);
-      if (yPos - a.yPos == 0) {
-        if (xPos - a.xPos == 1) {
-          canLeft = false;
-        } else if (xPos - a.xPos >= -1 && xPos - a.xPos <= 0) {
-          canRight = false;
-        }
-      }
-      if (xPos - a.xPos == 0) {
-        if (yPos - a.yPos == 1) {
-          canUp = false;
-        } else if (yPos - a.yPos >= -1 && yPos - a.yPos <= 0) {
-          canDown = false;
-        }
-      }
-    }
+
     if (type.equals("Robot")) {
+      int changeX = 0;
+      if (counter < 30) {
+        counter++;
+      }
       if (Math.abs(xPixel - xPos*tileSize) <= robotSpeed) {
         xPixel = xPos*tileSize;
       }
       if (Math.abs(yPixel - yPos*tileSize) <= robotSpeed) {
         yPixel = yPos*tileSize;
       }
-      if (xPixel == xPos*tileSize && yPixel == yPos*tileSize) {
-        if (xPos < playerX && canRight == true) {
-          xPos++;
-        } else if (xPos > playerX && canLeft == true) {
-          xPos--;
-        }
-        if (yPos < playerY && canDown == true) {
-          yPos++;
-        } else if (yPos > playerY && canUp == true) {
-          yPos--;
+      if (xPixel == xPos*tileSize && yPixel == yPos*tileSize && counter == 30) {
+        counter = 0;
+        changeX = (int)(random(0, 3));
+        if (changeX == 0) {
+          if (xPos < playerX) {
+            xPos++;
+          } else if (xPos > playerX) {
+            xPos--;
+          }
+        } else if (changeX == 1) {
+          if (yPos < playerY) {
+            yPos++;
+          } else if (yPos > playerY) {
+            yPos--;
+          }
         }
       }
       if (xPixel < xPos*tileSize) {
         xPixel += robotSpeed;
-      }  
-      if (xPixel > xPos*tileSize) {
+      } else if (xPixel > xPos*tileSize) {
         xPixel -= robotSpeed;
       }
       if (yPixel < yPos*tileSize ) {
         yPixel += robotSpeed;
-      }  
-      if (yPixel > yPos*tileSize ) {
+      } else if (yPixel > yPos*tileSize ) {
         yPixel -= robotSpeed;
       }
+    } else if (type.equals("Dog")) {
     }
   }
 }
