@@ -34,22 +34,20 @@ class Enemy {
     boolean canDown = true;
     boolean canLeft = true;
     boolean canRight = true;
-    for(int i=0; i<enemies.size(); i++){
+    for (int i=0; i<enemies.size (); i++) {
       Enemy a = enemies.get(i);
-      if(Math.abs(yPos - a.yPos) <= collideRange){
-        if(xPos - a.xPos <= collideRange && xPos - a.xPos > 0){
+      if (yPos - a.yPos == 0) {
+        if (xPos - a.xPos == 1) {
+          canLeft = false;
+        } else if (xPos - a.xPos >= -1 && xPos - a.xPos <= 0) {
           canRight = false;
         }
-        else if(xPos - a.xPos >= -collideRange && xPos - a.xPos < 0){
-          canLeft = false;
-        }
       }
-      if(Math.abs(xPos - a.xPos) <= collideRange){
-        if(yPos - a.yPos <= collideRange && yPos - a.yPos > 0){
-          canDown = false;
-        }
-        else if(yPos - a.yPos >= -collideRange && yPos - a.yPos < 0){
+      if (xPos - a.xPos == 0) {
+        if (yPos - a.yPos == 1) {
           canUp = false;
+        } else if (yPos - a.yPos >= -1 && yPos - a.yPos <= 0) {
+          canDown = false;
         }
       }
     }
@@ -61,29 +59,27 @@ class Enemy {
         yPixel = yPos*tileSize;
       }
       if (xPixel == xPos*tileSize && yPixel == yPos*tileSize) {
-        if (xPos < playerX) {
+        if (xPos < playerX && canRight == true) {
           xPos++;
-        }  
-        else if (xPos > playerX) {
+        } else if (xPos > playerX && canLeft == true) {
           xPos--;
         }
-        if (yPos < playerY) {
+        if (yPos < playerY && canDown == true) {
           yPos++;
-        }  
-        else if (yPos > playerY) {
+        } else if (yPos > playerY && canUp == true) {
           yPos--;
         }
       }
-      if (xPixel < xPos*tileSize && canRight == true) {
+      if (xPixel < xPos*tileSize) {
         xPixel += robotSpeed;
       }  
-      if (xPixel > xPos*tileSize && canLeft == true) {
+      if (xPixel > xPos*tileSize) {
         xPixel -= robotSpeed;
       }
-      if (yPixel < yPos*tileSize && canDown == true) {
+      if (yPixel < yPos*tileSize ) {
         yPixel += robotSpeed;
       }  
-      if (yPixel > yPos*tileSize && canUp == true) {
+      if (yPixel > yPos*tileSize ) {
         yPixel -= robotSpeed;
       }
     }
@@ -179,7 +175,6 @@ class Room {
 }
 
 //Global variables
-int collideRange;
 int tileSize;
 Room current;
 boolean setRoom;
@@ -207,7 +202,6 @@ int robotSpeed;
 //Setting up variables for the game
 
 void setup() {
-  collideRange = 2;
   playerSpeed = 3;
   setRoom = true;
   tileSize = 20;
