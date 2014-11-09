@@ -142,6 +142,75 @@ class Enemy {
        }
        println(" ");
        }*/
+    } else if (type.equals("Dog")) {
+      if (counter < 180) {
+        counter++;
+      }
+      if (counter < 120) {
+        String[][] copy = current.tiles;
+        int[][] route = new int[copy.length][copy[0].length];
+        for (int y=0; y<copy[0].length; y++) {
+          for (int x=0; x<copy.length; x++) {
+            if (copy[x][y].equals("Wall")) {
+              route[x][y] = -2;
+            } else {
+              route[x][y] = -1;
+            }
+            route[xPos][yPos] = 0;
+          }
+        }
+        route = pathFind(route, 0);
+        int x = playerX;
+        int y = playerY;
+        int cNum = route[x][y];
+        ArrayList<Integer> futureX = new ArrayList<Integer>();
+        ArrayList<Integer> futureY = new ArrayList<Integer>();
+        while (cNum > 1) {
+          futureX.add(x);
+          futureY.add(y);
+          cNum = route[x][y];
+          if (route[x][y-1] == cNum - 1) {
+            y--;
+          } else if (route[x+1][y] == cNum - 1) {
+            x++;
+          } else if (route[x][y+1] == cNum - 1) {
+            y++;
+          } else if (route[x--][y] == cNum - 1) {
+            x--;
+          }
+        }
+        if (Math.abs(xPixel - xPos*tileSize) <= dogSpeed) {
+          xPixel = xPos*tileSize;
+        }
+        if (Math.abs(yPixel - yPos*tileSize) <= dogSpeed) {
+          yPixel = yPos*tileSize;
+        }
+        int xPosMem = xPos;
+        int yPosMem = yPos;
+        if (yPixel == yPos*tileSize && xPixel == xPos*tileSize && futureX.size() > 0) {
+          xPos = futureX.get(futureX.size()-1);
+          yPos = futureY.get(futureY.size()-1);
+        }
+        if (xPixel < xPos*tileSize) {
+          xPixel += dogSpeed;
+        } else if (xPixel > xPos*tileSize) {
+          xPixel -= dogSpeed;
+        }
+        if (yPixel < yPos*tileSize ) {
+          yPixel += dogSpeed;
+        } else if (yPixel > yPos*tileSize ) {
+          yPixel -= dogSpeed;
+        }
+        for (int i=0; i<enemies.size (); i++) {
+          if (xPos == enemies.get(i).xPos && yPos == enemies.get(i).yPos && enemies.get(i) != this) {
+            xPos = xPosMem;
+            yPos = yPosMem;
+          }
+        }
+      }
+      else if(counter == 180){
+        counter = 0;
+      }
     }
   }
 }
@@ -295,6 +364,7 @@ int collideRange;
 
 int robotSpeed;
 int zombieSpeed;
+int dogSpeed;
 
 PImage wallSprite;
 PImage floorSprite;
@@ -304,6 +374,7 @@ PImage exitClose;
 //Setting up variables for the game
 
 void setup() {
+  dogSpeed = 2;
   exitOpen = loadImage("ExitOpen.png");
   exitClose = loadImage("ExitClose.png");
   wallSprite = loadImage("Wall.png");
