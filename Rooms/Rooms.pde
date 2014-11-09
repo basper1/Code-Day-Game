@@ -5,6 +5,7 @@ class Enemy {
   int yPos;
   int xPixel;
   int yPixel;
+  PImage image;
   Enemy(String type, int xPos, int yPos) {
     this.type = type;
     if (type.equals("Zombie")) {
@@ -23,23 +24,70 @@ class Enemy {
     if (type.equals("Zombie")) {
       image(zombieSprite, xPixel, yPixel);
     } else if (type.equals("Dog")) {
-      image(dogSprite, xPixel, yPixel);
+      image(dogSprite, xPixel-tileSize, yPixel);
     } else if (type.equals("Robot")) {
-      image(robotSprite, xPixel, yPixel-tileSize);
+      image(robotSprite, xPixel-tileSize, yPixel-tileSize);
     }
   }
-  void move(){
-    if(type.equals("Robot")){
-      if(Math.abs(xPixel - xPos*tileSize) <= robotSpeed){
+  void move() {
+    boolean canUp = true;
+    boolean canDown = true;
+    boolean canLeft = true;
+    boolean canRight = true;
+    for(int i=0; i<enemies.size(); i++){
+      Enemy a = enemies.get(i);
+      if(Math.abs(yPos - a.yPos) <= collideRange){
+        if(xPos - a.xPos <= collideRange && xPos - a.xPos > 0){
+          canRight = false;
+        }
+        else if(xPos - a.xPos >= -collideRange && xPos - a.xPos < 0){
+          canLeft = false;
+        }
+      }
+      if(Math.abs(xPos - a.xPos) <= collideRange){
+        if(yPos - a.yPos <= collideRange && yPos - a.yPos > 0){
+          canDown = false;
+        }
+        else if(yPos - a.yPos >= -collideRange && yPos - a.yPos < 0){
+          canUp = false;
+        }
+      }
+    }
+    if (type.equals("Robot")) {
+      if (Math.abs(xPixel - xPos*tileSize) <= robotSpeed) {
         xPixel = xPos*tileSize;
       }
-      if(Math.abs(yPixel - yPos*tileSize) <= robotSpeed){
+      if (Math.abs(yPixel - yPos*tileSize) <= robotSpeed) {
         yPixel = yPos*tileSize;
       }
-      if(xPixel == xPos*tileSize && yPixel == yPos*tileSize){
+      if (xPixel == xPos*tileSize && yPixel == yPos*tileSize) {
+        if (xPos < playerX) {
+          xPos++;
+        }  
+        else if (xPos > playerX) {
+          xPos--;
+        }
+        if (yPos < playerY) {
+          yPos++;
+        }  
+        else if (yPos > playerY) {
+          yPos--;
+        }
+      }
+      if (xPixel < xPos*tileSize && canRight == true) {
+        xPixel += robotSpeed;
+      }  
+      if (xPixel > xPos*tileSize && canLeft == true) {
+        xPixel -= robotSpeed;
+      }
+      if (yPixel < yPos*tileSize && canDown == true) {
+        yPixel += robotSpeed;
+      }  
+      if (yPixel > yPos*tileSize && canUp == true) {
+        yPixel -= robotSpeed;
+      }
     }
   }
-        
 }
 
 //The room class
@@ -131,7 +179,7 @@ class Room {
 }
 
 //Global variables
-
+int collideRange;
 int tileSize;
 Room current;
 boolean setRoom;
@@ -159,6 +207,7 @@ int robotSpeed;
 //Setting up variables for the game
 
 void setup() {
+  collideRange = 2;
   playerSpeed = 3;
   setRoom = true;
   tileSize = 20;
@@ -195,6 +244,7 @@ void draw() {
   image(playerSprite, playerPixelX, playerPixelY);
   for (int i=0; i<enemies.size (); i++) {
     enemies.get(i).display();
+    enemies.get(i).move();
   }
   if (Math.abs(playerPixelX-playerX*tileSize) <= playerSpeed) {
     playerPixelX = playerX*tileSize;
