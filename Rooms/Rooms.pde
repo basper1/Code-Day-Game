@@ -207,8 +207,7 @@ class Enemy {
             yPos = yPosMem;
           }
         }
-      }
-      else if(counter == 180){
+      } else if (counter == 180) {
         counter = 0;
       }
     }
@@ -360,21 +359,38 @@ PImage robotSprite;
 String[] enemyTypes;
 ArrayList<Enemy> enemies;
 
+String weapon;
+
 int collideRange;
 
 int robotSpeed;
 int zombieSpeed;
 int dogSpeed;
 
+String direction;
+
 PImage wallSprite;
 PImage floorSprite;
 PImage exitOpen;
 PImage exitClose;
+int cooldown;
+int rate;
 
 //Setting up variables for the game
 
+void switchWeapon(String x) {
+  if (x == "Laser") {
+    weapon = "Laser";
+    rate = 30;
+  }
+}
+
 void setup() {
+  direction = "up";
+  firing = false;
   dogSpeed = 2;
+  cooldown = 0;
+  switchWeapon("Laser");
   exitOpen = loadImage("ExitOpen.png");
   exitClose = loadImage("ExitClose.png");
   wallSprite = loadImage("Wall.png");
@@ -423,6 +439,17 @@ boolean playerCollide(int xChange, int yChange) {
 }
 
 void draw() {
+  if (cooldown > 0) {
+    cooldown--;
+    if (firing == true && cooldown == 0) {
+      cooldown = rate;
+      if (weapon == "Laser") {
+        if(direction == "up"){
+          
+      }
+    }
+  }
+
   if (setRoom == true) {
     int a = (int)(random(6, 11));
     for (int i=0; i<a; i++) {
@@ -465,6 +492,10 @@ void draw() {
   for (int i=0; i<enemies.size (); i++) {
     enemies.get(i).display();
     enemies.get(i).move();
+    if (enemies.get(i).health <= 0) {
+      enemies.remove(i);
+      i--;
+    }
   }
   if (Math.abs(playerPixelX-playerX*tileSize) <= playerSpeed) {
     playerPixelX = playerX*tileSize;
@@ -488,20 +519,29 @@ void draw() {
   }
   if (playerPixelX < playerX*tileSize) {
     playerPixelX += playerSpeed;
+    direction = "right";
   }
   if (playerPixelX > playerX*tileSize) {
     playerPixelX -= playerSpeed;
+    direction = "left";
   }
   if (playerPixelY < playerY*tileSize) {
     playerPixelY += playerSpeed;
+    direction = "down";
   }
   if (playerPixelY > playerY*tileSize) {
     playerPixelY -= playerSpeed;
+    direction = "up";
   }
   popMatrix();
 }
 
+boolean firing;
+
 void keyPressed() {
+  if (key == ' ') {
+    firing = true;
+  }
   if (key == CODED) {
     if (keyCode == UP) {
       up = true;
@@ -519,6 +559,9 @@ void keyPressed() {
 }
 
 void keyReleased() {
+  if (key == ' ') {
+    firing = false;
+  }
   if (key == CODED) {
     if (keyCode == UP) {
       up = false;
