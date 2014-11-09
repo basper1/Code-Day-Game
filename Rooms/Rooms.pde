@@ -7,7 +7,6 @@ class Enemy {
   int counter;
   int yPixel;
   PImage image;
-  int robotLeash = 100;
   Enemy(String type, int xPos, int yPos) {
     this.type = type;
     counter = 0;
@@ -33,9 +32,9 @@ class Enemy {
     }
   }
   void move() {
-
     if (type.equals("Robot")) {
-      int changeX = 0;
+      int xPosMem = 0;
+      int yPosMem = 0;
       if (counter < 30) {
         counter++;
       }
@@ -45,57 +44,25 @@ class Enemy {
       if (Math.abs(yPixel - yPos*tileSize) <= robotSpeed) {
         yPixel = yPos*tileSize;
       }
-<<<<<<< HEAD
       if (xPixel == xPos*tileSize && yPixel == yPos*tileSize && counter == 30) {
         counter = 0;
-        changeX = (int)(random(0, 3));
-        if (changeX == 0) {
-          if (xPos < playerX) {
-            xPos++;
-          } else if (xPos > playerX) {
-            xPos--;
-          }
-        } else if (changeX == 1) {
-          if (yPos < playerY) {
-            yPos++;
-          } else if (yPos > playerY) {
-            yPos--;
-          }
-=======
-      if (xPixel == xPos*tileSize && yPixel == yPos*tileSize) {
-        /*if (xPos < playerX && canRight == true) {
+        xPosMem = xPos;
+        yPosMem = yPos;
+        if (xPos < playerX) {
           xPos++;
-        } else if (xPos > playerX && canLeft == true) {
+        } else if (xPos > playerX) {
           xPos--;
         }
-        if (yPos < playerY && canDown == true) {
+        if (yPos < playerY) {
           yPos++;
-        } else if (yPos > playerY && canUp == true) {
+        } else if (yPos > playerY) {
           yPos--;
-        }*/
-        if((xPos - playerX)*(xPos - playerX)+(yPos - playerY)*(yPos - playerY) < robotLeash*robotLeash){
-          if(xPos != playerX){
-            if(xPos> playerX){
-              xPos-=random(0,2);
-            }else if(xPos< playerX){
-              xPos+=random(0,2);
-            }
-          }else{
-            xPos+=random(-1,2);
+        }
+        for(int i=0; i<enemies.size(); i++){
+          if(xPos == enemies.get(i).xPos && yPos == enemies.get(i).yPos && enemies.get(i) != this){
+            xPos = xPosMem;
+            yPos = yPosMem;
           }
-          if(yPos != playerY){
-            if(yPos> playerY){
-              yPos-=random(0,2);
-            }else if(yPos< playerY){
-              yPos+=random(0,2);
-            }
-          }else{
-            yPos+=random(-1,2);
-          }
-        }else{
-          yPos+=random(-1,2);
-          xPos+=random(-1,2);
->>>>>>> origin/master
         }
       }
       if (xPixel < xPos*tileSize) {
@@ -224,6 +191,8 @@ PImage robotSprite;
 String[] enemyTypes;
 ArrayList<Enemy> enemies;
 
+int collideRange;
+
 int robotSpeed;
 
 //Setting up variables for the game
@@ -240,6 +209,8 @@ void setup() {
   playerPixelX = playerX*tileSize;
   playerPixelY = playerY*tileSize;
   robotSpeed = 1;
+
+  collideRange = 2;
 
   moving = false;
 
@@ -323,6 +294,7 @@ void draw() {
         }
       }
       Enemy b = new Enemy(enemyTypes[(int)(random(0, enemyTypes.length))], x, y);
+      b = new Enemy("Robot", x, y);
       enemies.add(b);
     }
     setRoom = false;
