@@ -75,10 +75,27 @@ class Enemy {
       } else if (yPixel > yPos*tileSize ) {
         yPixel -= robotSpeed;
       }
-    } else if (type.equals("Dog")) {
+    } else if (type.equals("Zombie")) {
+      String[][] copy = current.tiles;
+      int[][] route = new int[copy.length][copy[0].length];
+      for(int y=0; y<copy[0].length; y++){
+        for(int x=0; x<copy.length; x++){
+          if(copy[x][y].equals("Wall")){
+            route[x][y] = 0;
+          }
+          else if(copy[x][y].equals("Floor")){
+            route[x][y] = 1;
+          }
+        }
+      }
     }
   }
 }
+
+void pathFind(int[][] x, int startX, int startY){
+  int current = x[startX][startY];
+}
+  
 
 //The room class
 
@@ -198,6 +215,7 @@ int robotSpeed;
 //Setting up variables for the game
 
 void setup() {
+  frameRate(60);
   playerSpeed = 3;
   setRoom = true;
   tileSize = 20;
@@ -294,7 +312,6 @@ void draw() {
         }
       }
       Enemy b = new Enemy(enemyTypes[(int)(random(0, enemyTypes.length))], x, y);
-      b = new Enemy("Robot", x, y);
       enemies.add(b);
     }
     setRoom = false;
