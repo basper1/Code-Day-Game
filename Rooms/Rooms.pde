@@ -89,8 +89,53 @@ class Enemy {
         }
       }
       route = pathFind(route, 0);
-      
-      
+      int x = playerX;
+      int y = playerY;
+      int cNum = route[x][y];
+      ArrayList<Integer> futureX = new ArrayList<Integer>();
+      ArrayList<Integer> futureY = new ArrayList<Integer>();
+      while (cNum > 1) {
+        futureX.add(x);
+        futureY.add(y);
+        cNum = route[x][y];
+        if (route[x][y-1] == cNum - 1) {
+          y--;
+        } else if (route[x+1][y] == cNum - 1) {
+          x++;
+        } else if (route[x][y+1] == cNum - 1) {
+          y++;
+        } else if (route[x--][y] == cNum - 1) {
+          x--;
+        }
+      }
+      if (Math.abs(xPixel - xPos*tileSize) <= zombieSpeed) {
+        xPixel = xPos*tileSize;
+      }
+      if (Math.abs(yPixel - yPos*tileSize) <= zombieSpeed) {
+        yPixel = yPos*tileSize;
+      }
+      int xPosMem = xPos;
+      int yPosMem = yPos;
+      if (yPixel == yPos*tileSize && xPixel == xPos*tileSize && futureX.size() > 0) {
+        xPos = futureX.get(futureX.size()-1);
+        yPos = futureY.get(futureY.size()-1);
+      }
+      if (xPixel < xPos*tileSize) {
+        xPixel += zombieSpeed;
+      } else if (xPixel > xPos*tileSize) {
+        xPixel -= zombieSpeed;
+      }
+      if (yPixel < yPos*tileSize ) {
+        yPixel += zombieSpeed;
+      } else if (yPixel > yPos*tileSize ) {
+        yPixel -= zombieSpeed;
+      }
+      for (int i=0; i<enemies.size (); i++) {
+        if (xPos == enemies.get(i).xPos && yPos == enemies.get(i).yPos && enemies.get(i) != this) {
+          xPos = xPosMem;
+          yPos = yPosMem;
+        }
+      }
       /*for(int i = 0;i<route.length;i++){
        for(int j = 0;j<route[0].length;j++){
        print(route[i][j] + " ");
@@ -249,6 +294,7 @@ ArrayList<Enemy> enemies;
 int collideRange;
 
 int robotSpeed;
+int zombieSpeed;
 
 PImage wallSprite;
 PImage floorSprite;
@@ -275,6 +321,7 @@ void setup() {
   playerPixelX = playerX*tileSize;
   playerPixelY = playerY*tileSize;
   robotSpeed = 1;
+  zombieSpeed = 1;
 
   collideRange = 2;
 
