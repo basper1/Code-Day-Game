@@ -22,11 +22,24 @@ class Enemy {
   void display() {
     if (type.equals("Zombie")) {
       image(zombieSprite, xPixel, yPixel);
-    }
-    else if(type.equals("Dog")){
+    } else if (type.equals("Dog")) {
       image(dogSprite, xPixel, yPixel);
+    } else if (type.equals("Robot")) {
+      image(robotSprite, xPixel, yPixel-tileSize);
     }
   }
+  void move(){
+    if(type.equals("Robot")){
+      if(Math.abs(xPixel - xPos*tileSize) <= robotSpeed){
+        xPixel = xPos*tileSize;
+      }
+      if(Math.abs(yPixel - yPos*tileSize) <= robotSpeed){
+        yPixel = yPos*tileSize;
+      }
+      if(xPixel == xPos*tileSize && yPixel == yPos*tileSize){
+    }
+  }
+        
 }
 
 //The room class
@@ -137,8 +150,11 @@ boolean right;
 
 PImage zombieSprite;
 PImage dogSprite;
+PImage robotSprite;
 String[] enemyTypes;
 ArrayList<Enemy> enemies;
+
+int robotSpeed;
 
 //Setting up variables for the game
 
@@ -153,6 +169,7 @@ void setup() {
   playerY = current.tiles[0].length/2;
   playerPixelX = playerX*tileSize;
   playerPixelY = playerY*tileSize;
+  robotSpeed = 1;
 
   moving = false;
 
@@ -163,6 +180,7 @@ void setup() {
 
   zombieSprite = loadImage("Zombie.png");
   dogSprite = loadImage("Dog.png");
+  robotSprite = loadImage("Robot.png");
   enemyTypes = new String[] {
     "Zombie", "Robot", "Dog"
   };
@@ -221,19 +239,19 @@ void draw() {
         repeat = false;
         x = (int)(random(1, current.tiles.length));
         y = (int)(random(1, current.tiles[0].length));
-        if(current.tiles[x][y].equals("Wall")){
+        if (current.tiles[x][y].equals("Wall")) {
           repeat = true;
         }
-        if(enemies.size() > 0){
-          for(int j=0; j<enemies.size(); j++){
-            if(enemies.get(j).xPos == x && enemies.get(j).yPos == y){
+        if (enemies.size() > 0) {
+          for (int j=0; j<enemies.size (); j++) {
+            if (enemies.get(j).xPos == x && enemies.get(j).yPos == y) {
               repeat = true;
               break;
             }
           }
         }
       }
-      Enemy b = new Enemy("Zombie", x, y);
+      Enemy b = new Enemy(enemyTypes[(int)(random(0, enemyTypes.length))], x, y);
       enemies.add(b);
     }
     setRoom = false;
